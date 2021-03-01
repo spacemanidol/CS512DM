@@ -1,0 +1,113 @@
+\documentclass[11pt]{article}
+
+\usepackage{alltt,fullpage,graphics,color,epsfig,amsmath, amssymb}
+\usepackage{hyperref}
+\usepackage{boxedminipage}
+\usepackage[ruled,vlined]{algorithm2e}
+
+\newcommand{\floor}[1]{\lfloor #1 \rfloor}
+\newcommand{\ceil}[1]{\lceil #1 \rceil}
+
+\title{CS 512 Assignment 1}
+\author{Daniel Campos}
+\date{March 5th,2021}
+\begin{document}
+
+\maketitle
+\section{Problem 1}
+\subsection{List two differences between Frequent Pattern Growth algorithm and Apriori
+algorithm
+}
+Apriori requires K+1 scans of the database while FPGrowth requires 2. The apriori algorithm is a breath first search while FPGrowth is divide and conquer.  Apriori requires a large amount of memory and FPGrowth does not. 
+\subsection{Prove all nonempty subsets of a frequent itemset must also be frequent and prove the support of any nonempty subset s' of itemset s must be at least as large as the support of s.}
+\subsubsection{Answer Prove all nonempty subsets of a frequent item list must be frequent}
+\begin{enumerate}
+    \item Let $S = {i_0, i_1,..., i_n}$ be a set of items.
+    \item Let $R = {r_0, r_1, ...,r_m}$ be a set of records where each record $r_j$ is a set of items where $\forall k \in r_j$ $r_{jk} \in S$.
+    \item Let $F = {i_0, i_1, ...,i_k}$ where each $\forall k \in F$ $F_k \in S$
+    \item A frequent item set contains items where their occurrence is $>= minsup$ where minsup represents a minimum support threshold where only items that occur at or more than this threshold are in $F$. 
+    \item Let $ss$ represent possible non empty subsets of $F$
+    \item Since every possible $ss \in F$ all items in $ss$ occur $>= minsup$ and therefore all items $\in ss$ must all be frequent as well. 
+    \item As a result, all non empty subsets of a frequent itemset must be frequent.
+\end{enumerate}
+\subsubsection{Prove any nonempty subset s must be at least as large as the support of s}
+\begin{enumerate}
+    \item Let $S = {i_0, i_1,..., i_n}$ be a set of items.
+    \item Let $R = {r_0, r_1, ...,r_m}$ be a set of records where each record $r_j$ is a set of items where $\forall k \in r_j$ $r_{jk} \in S$.
+    \item Given all non-empty subsets of $S$ where $s' = {i_1, i_k, ...}$ where $s' \in S$.
+    \item Since the support of a itemset is driven by how often its items occur in $R$ the support of $S$ is that of its least common item. 
+    \item Since all items $i_k \in ss$ are also in $S$ the support for $i_k \in s'$ > = support($S$).
+    \item Since $\forall i_k \in s'> support(S)$ then we know $support(s') \ge support(s)$
+    \item Thus all non-empty subsets $s'$ must be at least as large as the support of $S$
+\end{enumerate}
+\subsection{What problem might lift and $\chi^2$ have? Explain why Jaccard function is null-invariant}
+Lift and $X^2$
+\subsubsection{What problems do $Lift$ and $\chi^2$ have}
+Neither deal way with datasets that have large amounts of null transaction for the variables being compared. In other words if we are studying the correlation between variable A and B and both A and B do not have a balanced occurrence(in other words $\neg A > A$ and $\neg B > B$ both $\chi^2$ and $Lift$ will not be good measures.
+\subsubsection{Why is Jaccard function null-invariant}
+The Jaccard function is null invariant because it is only looking at when variables occur and does not use information from where the variables do not occur. To build on our example from part a: Jaccard function looks at $A$ and $B$ and ignores $\neg A$ and $\neg B$. This makes Jaccard null-invariant.
+\subsection{Under what circumstances will PrefixSpan also have poor performance}
+Since the major cost in prefixspan is Constructing projected dbs and Suffixes are largely repeating, if the target records include a large quantity of unique items then storing the physical DB in memory can be prohibitive and require projections. In short when the transaction dataset is large and there are a large amount of prefixes(say items on amazon).  
+\section{Problem 2: Apriori vs Frequent Pattern Growth}
+\subsection{Present the intermediate results of the first three scans and the final derived frequent itemsets.}
+\subsubsection{First Scan}
+a
+\subsubsection{Second Scan}
+a
+\subsubsection{Third Scan}
+a
+\subsubsection{Final derived frequent itemsets}
+a
+\section{Problem 3: Frequent Pattern Mining Implementation}
+\subsubsection{Data statistics}
+\begin{table}[]
+    \centering
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{|c|c|} \hline
+       Product Types  & 169  \\ \hline
+       Transactions & 9835 \\ \hline
+       Average Products per transactions & 4.41 \\ \hline 
+       Top 5 most popular products  & Whole milk(2513), other vegetables(1903), rolls/buns(1809), soda(1715), yogurt(1372) \\ \hline
+       Items with single purchase & baby food, sound storage medium  \\ \hline
+    \end{tabular}}
+    \caption{Caption}
+    \label{tab:my_label}
+\end{table}
+\subsection{Results + Contingency table}
+\begin{table}[]
+    \centering
+    \begin{tabular}{|c|c|c|} \hline
+       Min Support  & Min Confidence & Top 10 frequent item sets  \\ \hline
+       & & \\ \hline
+    \end{tabular}
+    \caption{Caption}
+    \label{tab:my_label}
+\end{table}
+Contingency table of Yogurt and Whole milk
+\begin{table}[]
+    \centering
+    \begin{tabular}{|c|c|c| } \hline
+       Item & Min Confidence & Top 10 frequent itemsets  \\ \hline
+       Whole Milk & 9835 \\ \hline
+       $\neg$ Whole Milk & &  \\ \hline 
+    \end{tabular}
+    \caption{Caption}
+    \label{tab:my_label}
+\end{table}
+
+\subsection{Run time}
+My run times comparing our implementation in of Apriori in python vs FP-Growth(via pyfpgrowth)
+\begin{table}[]
+    \centering
+    \begin{tabular}{|c|c|c}} \hline
+       Transactions  & Apriori(ms) & FP-Growth(ms)  \\ \hline
+       100 & & \\ \hline
+       1000 & & \\ \hline
+       2000 & & \\ \hline
+       5000 & & \\ \hline
+       Full & & \\ \hline 
+    \end{tabular}
+    \caption{Caption}
+    \label{tab:my_label}
+\end{table}
+\end{document}

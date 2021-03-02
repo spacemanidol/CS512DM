@@ -53,7 +53,7 @@ Since the major cost in prefixspan is Constructing projected dbs and Suffixes ar
 \subsection{Present the intermediate results of the first three scans and the final derived frequent itemsets.}
 \subsubsection{First Scan}
 See results in table \ref{tab:1st}
-\begin{table}[!htbp]
+\begin{table}[]
     \centering
     \begin{tabular}{|c|c|} \hline
         Itemset & Support \\ \hline
@@ -69,7 +69,7 @@ See results in table \ref{tab:1st}
 \end{table}
 \subsubsection{Second Scan}
 See results in table \ref{tab:2nd}
-\begin{table}[!htbp]
+\begin{table}[]
     \centering
     \begin{tabular}{|c|c|} \hline
         Itemset & Support \\ \hline
@@ -85,7 +85,7 @@ See results in table \ref{tab:2nd}
 \end{table}
 \subsubsection{Third Scan}
 See results in table \ref{tab:3rd}
-\begin{table}[!htbp]
+\begin{table}[]
     \centering
     \begin{tabular}{|c|c|} \hline
         Itemset & Support \\ \hline
@@ -97,7 +97,7 @@ See results in table \ref{tab:3rd}
 \end{table}
 \subsubsection{Final derived frequent itemsets}
 See results in table \ref{tab:final}
-\begin{table}[!htbp]
+\begin{table}[]
     \centering
     \begin{tabular}{|c|c|} \hline
         Itemset & Support \\ \hline
@@ -122,7 +122,7 @@ See results in table \ref{tab:final}
 \subsection{Frequent Pattern}
 First off we go ahead and sort our items by frequency giving us the ordering: C(5), A(4), F(4), B(3), M(3), P(3).
 Using the updated frequency sorted ordering the updated transactional database is found in table \ref{tab:sorted}.
-\begin{table}[!htbp]
+\begin{table}[]
     \centering
     \begin{tabular}{|c|c|} \hline
         TID & ITEMS \\ \hline
@@ -137,7 +137,8 @@ Using the updated frequency sorted ordering the updated transactional database i
     \label{tab:sorted}
 \end{table}
 Using this updated transaction database we create the pattern tree found in figure \ref{fig:fptree}.
-\begin{figure}[!htbp]
+\begin{figure}[]
+\centering
 \includegraphics[width=8cm]{Assignments/Assignment1/FPtree.png}
 \caption{Frequent Pattern Tree}
 \label{fig:fptree}
@@ -148,8 +149,8 @@ $M \rightarrow A = 1.0$ \\
 $A \rightarrow C = 1.0$ \\
 $P \rightarrow C = 1.0$ \\
 \section{Problem 3: Frequent Pattern Mining Implementation}
-\subsubsection{Data statistics}
-\begin{table}[h]
+\subsection{Data statistics}
+\begin{table}[]
     \centering
     \resizebox{\textwidth}{!}{%
     \begin{tabular}{|c|c|} \hline
@@ -162,7 +163,7 @@ $P \rightarrow C = 1.0$ \\
     \caption{Grocery dataset statistics}
     \label{tab:stats}
 \end{table}
-\subsection{Results + Contingency table}
+\subsection{Results }
 Using the minimum support values of 0.05 and confidence of 0.25 the top 10 frequent item sets:
 \begin{enumerate}
     \item whole milk: 0.26
@@ -183,8 +184,8 @@ Using the same thresholds the inferred rules are:
     \item (other vegetables) $\rightarrow$ (whole milk) : $0.29$
     \item (yogurt) $\rightarrow$ (whole milk) : $0.40$
 \end{enumerate}
-\subsubsection{Contingency Table: Yogurt and Whole milk}
-\begin{table}[h]
+\subsection{Contingency Table: Yogurt and Whole milk}
+\begin{table}[]
     \centering
     \begin{tabular}{|c|c|c|c| } \hline
        Item & Yogurt & $\neg$ Yogurt & Total  \\ \hline
@@ -195,21 +196,27 @@ Using the same thresholds the inferred rules are:
     \caption{Caption}
     \label{tab:my_label}
 \end{table}
-\subsubsection{Interestingness using Lift}
+\subsection{Interestingness using Lift}
 Let A represent Whole milk and B represent yogurt. \\
 \begin{equation}
-lift(A,B) = \frac{c(A \rightarrow B)} {s(B)} = \frac{s(A \cup B)}{s(A)*s(B)} =  \frac{551/9836}{(1372/9835)*(2513/9835)} = \frac{0.05601871}{(0.13950178)(0.25551601)} = \frac{0.05601871}{0.0356449382134978} = 1.5715754552433814 = 1.57
+lift(A,B) = \frac{c(A \rightarrow B)} {s(B)} = \frac{s(A \cup B)}{s(A)*s(B)} =  \frac{551/9836}{(1372/9835)*(2513/9835)}
+\end{equation}
+\begin{equation}
+lift(A, B) = \frac{0.05601871}{(0.13950178)(0.25551601)} = \frac{0.05601871}{0.0356449382134978} = 1.5715754552433814 = 1.57
 \end{equation}
 Since the Lift of A and B is over one they are positively correlated. \\
 \begin{equation}
-lift(A,\neg B) = \frac{c(A \rightarrow B)} {s(B)} = \frac{s(A \cup B)}{s(A)*s(B)} =  \frac{1962/9836}{(8463/9835)*(2513/9835)} = \frac{0.1994713298088654}{(0.8604982206405694)(0.25551601)} = \frac{0.1994713298088654}{0.21987107195017794} = 0.9072195266054142 = 0.91
+lift(A,\neg B) = \frac{c(A \rightarrow B)} {s(B)} = \frac{s(A \cup B)}{s(A)*s(B)} =  \frac{1962/9836}{(8463/9835)*(2513/9835)} 
+\end{equation}
+\begin{equation}
+lift(A, \neg B) =  \frac{0.1994713298088654}{(0.8604982206405694)(0.25551601)} = \frac{0.1994713298088654}{0.21987107195017794} = 0.9072195266054142 = 0.91
 \end{equation}
 Since the lift of A and $\neg B$ is under one they are negatively correlated.\\
 \subsection{Run time}
 My run times comparing our implementation in of Apriori in python vs FP-Growth(via pyfpgrowth)
-\begin{table}[h]
+\begin{table}[]
     \centering
-    \begin{tabular}{|c|c|c} \hline
+    \begin{tabular}{|c|c|c|} \hline
        Transactions  & Apriori(ms) & FP-Growth(ms)  \\ \hline
        500 & 3.13e-5 & 1.58e-4 \\ \hline 
        1000 & 6.37e-5 & 5.98e-5 \\ \hline 
@@ -217,7 +224,165 @@ My run times comparing our implementation in of Apriori in python vs FP-Growth(v
        5000 & 1.74e-4 & 6.35e-5\\ \hline 
        Full & 2.51e-4 & 1.09e-4 \\ \hline 
     \end{tabular}
-    \caption{Caption}
+    \caption{FP-Growth vs Apriori execution time}
     \label{tab:my_label}
 \end{table}
+\section{Problem 4: Sequential and Graph Pattern Mining}
+\subsection{Sequential database}
+\subsubsection{Projections }
+for $\langle ab \rangle$ see table \ref{tab:ab}, for $\langle (ab) \rangle$ see table \ref{tab:(ab)}, for $\langle de \rangle$ see table \ref{tab:de}, for $\langle abc \rangle$ see table \ref{tab:abc}, for $\langle acb \rangle$ see table \ref{tab:acb},for $\langle abca \rangle$ see table \ref{tab:acba}    
+\begin{table}[]
+    \centering
+    \begin{tabular}{|c|c|} \hline
+       SID  & Sequence  \\ \hline
+       1 & $\langle (_cf)(ac)b \rangle$ \\ \hline
+       2 & $\langle (_)c(bc)ab(ce) \rangle$ \\ \hline
+       3 & $\langle _(acf)acd \rangle$ \\ \hline
+       4 & $\langle (_c)(ae) \rangle$ \\ \hline
+       5 & $\langle (_d)df(ab) \rangle$\\ \hline
+       6 & $\langle (_c)eab(cd)f(abd) \rangle$ \\ \hline
+    \end{tabular}
+    \caption{Projection for $\langle ab \rangle$}
+    \label{tab:ab}
+\end{table}
+\begin{table}[]
+    \centering
+    \begin{tabular}{|c|c|} \hline
+       SID  & Sequence  \\ \hline
+       1 & $\langle  \rangle$ \\ \hline
+       2 & $\langle c(bc)ab(ce) \rangle$ \\ \hline
+       3 & $\langle  \rangle$ \\ \hline
+       4 & $\langle (_c)(ae) \rangle$ \\ \hline
+       5 & $\langle (_d)df(ab) \rangle$\\ \hline
+       6 & $\langle (_c)eab(cd)f(abd) \rangle$ \\ \hline
+    \end{tabular}
+    \caption{Projection for $\langle (ab) \rangle$}
+    \label{tab:(ab)}
+\end{table}
+\begin{table}[]
+    \centering
+    \begin{tabular}{|c|c|} \hline
+       SID  & Sequence  \\ \hline
+       1 & $\langle  \rangle$\\ \hline
+       2 & $\langle  \rangle$ \\ \hline
+       3 & $\langle _(af)acb(acf)acd \rangle$ \\ \hline
+       4 & $\langle _(abc)(ae) \rangle$ \\ \hline
+       5 & $\langle  \rangle$\\ \hline
+       6 & $\langle  \rangle$ \\ \hline
+    \end{tabular}
+    \caption{Projection for $\langle de \rangle$}
+    \label{tab:de}
+\end{table}
+\begin{table}[]
+    \centering
+    \begin{tabular}{|c|c|} \hline
+       SID  & Sequence  \\ \hline
+       1 & $\langle (_f)(ac)b \rangle$\\ \hline
+       2 & $\langle _(bc)ab(ce) \rangle$ \\ \hline
+       3 & $\langle (_f)acd \rangle$ \\ \hline
+       4 & $\langle (_)(ae) \rangle$ \\ \hline
+       5 & $\langle  \rangle$\\ \hline
+       6 & $\langle eab(cd)f(abd) \rangle$ \\ \hline
+    \end{tabular}
+    \caption{Projection for $\langle abc\rangle$}
+    \label{tab:abc}
+\end{table}
+\begin{table}[]
+    \centering
+    \begin{tabular}{|c|c|} \hline
+       SID  & Sequence  \\ \hline
+       1 & $\langle  \rangle$\\ \hline
+       2 & $\langle (_c)ab(ce) \rangle$ \\ \hline
+       3 & $\langle (acf)acd \rangle$ \\ \hline
+       4 & $\langle  \rangle$ \\ \hline
+       5 & $\langle (_d)df(ab) \rangle$\\ \hline
+       6 & $\langle (cd)f(abd) \rangle$ \\ \hline
+    \end{tabular}
+    \caption{Projection for $\langle acb \rangle$}
+    \label{tab:acb}
+\end{table}
+\begin{table}[]
+    \centering
+    \begin{tabular}{|c|c|} \hline
+       SID  & Sequence  \\ \hline
+       1 & $\langle _ \rangle$\\ \hline
+       2 & $\langle _b(ce) \rangle$ \\ \hline
+       3 & $\langle (_cf)acd \rangle$ \\ \hline
+       4 & $\langle  \rangle$ \\ \hline
+       5 & $\langle (_b) \rangle$\\ \hline
+       6 & $\langle (_bd)  \rangle$ \\ \hline
+    \end{tabular}
+    \caption{Projection for $\langle acba\rangle$}
+    \label{tab:acba}
+\end{table}
+\subsubsection{Sequential Patterns}
+Sequential patterns where support = 3 and length $\ge 3$
+ABC I guess
+\subsection{Graph mining}
+\subsubsection{Support}
+P1 support is $\frac{4}{5}$ and is supported by G2, G3, G4, and G5. \\
+P2 support is $\frac{3}{5}$ and is supported by G1, G2, and G5. \\
+P3 support is $\frac{3}{5}$ and is supported by G1, G3 and G5.
+\subsubsection{Apriori-based}
+see figure \ref{fig:graph-apri}
+\begin{figure}[]
+\centering
+\includegraphics[width=8cm]{Assignments/Assignment1/graphapri.png}
+\caption{Graph sequence apriori mining}
+\label{fig:graph-apri}
+\end{figure}
+\section{Problem 5: SVM, RBF Kernel}
+\subsection{Prove all eigenvalues are non negative}
+\subsection{Prove RBF Kernel is the sum of infinite polynomial kernels}
+\subsection{Decision Boundary}
+If we were to use a large $\gamma$ we would likely be able to separate the training data nearly perfectly. We would be over fitting to training but could likely produce results seen in figure \ref{fig:bound}
+\begin{figure}[]
+\centering
+\includegraphics[width=8cm]{Assignments/Assignment1/decisionbound.png}
+\caption{Decision Boundary using high $\gamma$}
+\label{fig:bound}
+\end{figure}
+\subsection{Effect of large $\gamma$}
+If we are to make the $\gamma$ infinitely large we will completely fit the SVM to the training data and overfit the model. Our training accuracy may reach 100\% but our transfer accuracy will suffer. This is because larger RBF kernel bandwidths(which are smaller $\gamma$ values produce a smoother feature space mapping. As we scale our $\gamma$ value we produce a less smooth kernel which will allow us to learn harder decision boundaries but will overfit to the decision boundary of the training corpus. 
+\section{Problem 6:Feature Selection}
+\subsection{Classification Results}
+Our accuracy is , Precision is , recall is , and F1 is 
+\begin{table}[]
+    \centering
+    \begin{tabular}{|c|c|c|} \hline
+       Reference Label  & Predicted 0 & Predict 1   \\ \hline
+       0 & & \\ \hline
+       1 & & \\ \hline
+    \end{tabular}
+    \caption{Projection for $\langle acba\rangle$}
+    \label{tab:Accuracy}
+\end{table}
+\subsection{Fisher Score Feature Selection}
+Using Fisher Score we change our data to ...
+Our accuracy is , Precision is , recall is , and F1 is 
+\begin{table}[]
+    \centering
+    \begin{tabular}{|c|c|c|} \hline
+       Reference Label  & Predicted 0 & Predict 1   \\ \hline
+       0 & & \\ \hline
+       1 & & \\ \hline
+    \end{tabular}
+    \caption{Projection for $\langle acba\rangle$}
+    \label{tab:Accuracy}
+\end{table}
+\section{Problem 7:Self Training}
+Using self training we ...
+Our accuracy is , Precision is , recall is , and F1 is 
+\begin{table}[]
+    \centering
+    \begin{tabular}{|c|c|c|} \hline
+       Reference Label  & Predicted 0 & Predict 1   \\ \hline
+       0 & & \\ \hline
+       1 & & \\ \hline
+    \end{tabular}
+    \caption{Projection for $\langle acba\rangle$}
+    \label{tab:Accuracy}
+\end{table}
+\section{Random Walk with Restart}
+\subsection{Capture multiple weighted relationships}
 \end{document}

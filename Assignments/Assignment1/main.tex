@@ -4,7 +4,8 @@
 \usepackage{hyperref}
 \usepackage{boxedminipage}
 \usepackage[ruled,vlined]{algorithm2e}
-
+\usepackage{graphicx}
+\graphicspath{ {.} }
 \newcommand{\floor}[1]{\lfloor #1 \rfloor}
 \newcommand{\ceil}[1]{\lceil #1 \rceil}
 
@@ -51,16 +52,104 @@ Since the major cost in prefixspan is Constructing projected dbs and Suffixes ar
 \section{Problem 2: Apriori vs Frequent Pattern Growth}
 \subsection{Present the intermediate results of the first three scans and the final derived frequent itemsets.}
 \subsubsection{First Scan}
-a
+See results in table \ref{tab:1st}
+\begin{table}[!htbp]
+    \centering
+    \begin{tabular}{|c|c|} \hline
+        Itemset & Support \\ \hline
+        A & 4 \\ \hline
+        B & 3 \\ \hline
+        C & 5 \\ \hline
+        F & 4 \\ \hline
+        M & 3 \\ \hline
+        P & 3 \\ \hline
+    \end{tabular}
+    \caption{Apriori first scan}
+    \label{tab:1st}
+\end{table}
 \subsubsection{Second Scan}
-a
+See results in table \ref{tab:2nd}
+\begin{table}[!htbp]
+    \centering
+    \begin{tabular}{|c|c|} \hline
+        Itemset & Support \\ \hline
+        A,C & 4 \\ \hline
+        A,M & 3 \\ \hline
+        A,P & 3 \\ \hline
+        C, F & 3 \\ \hline
+        C, M & 3 \\ \hline
+        C, P & 3 \\ \hline
+    \end{tabular}
+    \caption{Apriori second scan}
+    \label{tab:2nd}
+\end{table}
 \subsubsection{Third Scan}
-a
+See results in table \ref{tab:3rd}
+\begin{table}[!htbp]
+    \centering
+    \begin{tabular}{|c|c|} \hline
+        Itemset & Support \\ \hline
+        A, C, M & 3  \\ \hline
+        A, C, P & 3  \\ \hline
+    \end{tabular}
+    \caption{Apriori third scan}
+    \label{tab:3rd}
+\end{table}
 \subsubsection{Final derived frequent itemsets}
-a
+See results in table \ref{tab:final}
+\begin{table}[!htbp]
+    \centering
+    \begin{tabular}{|c|c|} \hline
+        Itemset & Support \\ \hline
+        A & 4 \\ \hline
+        B & 3 \\ \hline
+        C & 5 \\ \hline
+        F & 4 \\ \hline
+        M & 3 \\ \hline
+        P & 3 \\ \hline
+        A,C & 4 \\ \hline
+        A,M & 3 \\ \hline
+        A,P & 3 \\ \hline
+        C, F & 3 \\ \hline
+        C, M & 3 \\ \hline
+        C, P & 3 \\ \hline
+        A, C, M & 3  \\ \hline
+        A, C, P & 3  \\ \hline
+    \end{tabular}
+    \caption{Apriori Derived frequent itemsets}
+    \label{tab:final}
+\end{table}
+\subsection{Frequent Pattern}
+First off we go ahead and sort our items by frequency giving us the ordering: C(5), A(4), F(4), B(3), M(3), P(3).
+Using the updated frequency sorted ordering the updated transactional database is found in table \ref{tab:sorted}.
+\begin{table}[!htbp]
+    \centering
+    \begin{tabular}{|c|c|} \hline
+        TID & ITEMS \\ \hline
+        1 & {C, A, B, P} \\ \hline
+        2 & {C, A, B, M} \\ \hline
+        3 & {F, B} \\ \hline
+        4 & {C, A, F, M, P} \\ \hline
+        5 & {C, A, F, M, P} \\ \hline
+        6 & {C, F} \\ \hline
+    \end{tabular}
+    \caption{FPGrowth updated and sorted transaction database}
+    \label{tab:sorted}
+\end{table}
+Using this updated transaction database we create the pattern tree found in figure \ref{fig:fptree}.
+\begin{figure}[!htbp]
+\includegraphics[width=8cm]{Assignments/Assignment1/FPtree.png}
+\caption{Frequent Pattern Tree}
+\label{fig:fptree}
+\end{figure}
+\subsection{Association rules}
+Top 3 association rules and their confidence. \\
+$M \rightarrow A = 1.0$ \\
+$A \rightarrow C = 1.0$ \\
+$P \rightarrow C = 1.0$ \\
 \section{Problem 3: Frequent Pattern Mining Implementation}
 \subsubsection{Data statistics}
-\begin{table}[]
+\begin{table}[h]
     \centering
     \resizebox{\textwidth}{!}{%
     \begin{tabular}{|c|c|} \hline
@@ -70,42 +159,63 @@ a
        Top 5 most popular products  & Whole milk(2513), other vegetables(1903), rolls/buns(1809), soda(1715), yogurt(1372) \\ \hline
        Items with single purchase & baby food, sound storage medium  \\ \hline
     \end{tabular}}
-    \caption{Caption}
-    \label{tab:my_label}
+    \caption{Grocery dataset statistics}
+    \label{tab:stats}
 \end{table}
 \subsection{Results + Contingency table}
-\begin{table}[]
+Using the minimum support values of 0.05 and confidence of 0.25 the top 10 frequent item sets:
+\begin{enumerate}
+    \item whole milk: 0.26
+    \item other vegetables:0.19
+    \item rolls/buns:0.184
+    \item soda:0.174
+    \item yogurt:0.140
+    \item bottled water: 0.11
+    \item root vegetables: 0.109
+    \item tropical fruit: 0.11
+    \item shopping bags: 0.10
+    \item sausage:0.09
+\end{enumerate}
+Using the same thresholds the inferred rules are:
+\begin{enumerate}
+    \item (whole milk) $\rightarrow$ (other vegetables) : $0.29$
+    \item (rolls/buns) $\rightarrow$ (whole milk) : $0.29$
+    \item (other vegetables) $\rightarrow$ (whole milk) : $0.29$
+    \item (yogurt) $\rightarrow$ (whole milk) : $0.40$
+\end{enumerate}
+\subsubsection{Contingency Table: Yogurt and Whole milk}
+\begin{table}[h]
     \centering
-    \begin{tabular}{|c|c|c|} \hline
-       Min Support  & Min Confidence & Top 10 frequent item sets  \\ \hline
-       & & \\ \hline
+    \begin{tabular}{|c|c|c|c| } \hline
+       Item & Yogurt & $\neg$ Yogurt & Total  \\ \hline
+       Whole Milk & 551 & 1962 & 2513 \\ \hline
+       $\neg$ Whole Milk & 821  & 6501&  7322\\ \hline 
+       Total &1372 & 8463 &9835 \\ \hline
     \end{tabular}
     \caption{Caption}
     \label{tab:my_label}
 \end{table}
-Contingency table of Yogurt and Whole milk
-\begin{table}[]
-    \centering
-    \begin{tabular}{|c|c|c| } \hline
-       Item & Min Confidence & Top 10 frequent itemsets  \\ \hline
-       Whole Milk & 9835 \\ \hline
-       $\neg$ Whole Milk & &  \\ \hline 
-    \end{tabular}
-    \caption{Caption}
-    \label{tab:my_label}
-\end{table}
-
+\subsubsection{Interestingness using Lift}
+Let A represent Whole milk and B represent yogurt. \\
+\begin{equation}
+lift(A,B) = \frac{c(A \rightarrow B)} {s(B)} = \frac{s(A \cup B)}{s(A)*s(B)} =  \frac{551/9836}{(1372/9835)*(2513/9835)} = \frac{0.05601871}{(0.13950178)(0.25551601)} = \frac{0.05601871}{0.0356449382134978} = 1.5715754552433814 = 1.57
+\end{equation}
+Since the Lift of A and B is over one they are positively correlated. \\
+\begin{equation}
+lift(A,\neg B) = \frac{c(A \rightarrow B)} {s(B)} = \frac{s(A \cup B)}{s(A)*s(B)} =  \frac{1962/9836}{(8463/9835)*(2513/9835)} = \frac{0.1994713298088654}{(0.8604982206405694)(0.25551601)} = \frac{0.1994713298088654}{0.21987107195017794} = 0.9072195266054142 = 0.91
+\end{equation}
+Since the lift of A and $\neg B$ is under one they are negatively correlated.\\
 \subsection{Run time}
 My run times comparing our implementation in of Apriori in python vs FP-Growth(via pyfpgrowth)
-\begin{table}[]
+\begin{table}[h]
     \centering
-    \begin{tabular}{|c|c|c}} \hline
+    \begin{tabular}{|c|c|c} \hline
        Transactions  & Apriori(ms) & FP-Growth(ms)  \\ \hline
-       100 & & \\ \hline
-       1000 & & \\ \hline
-       2000 & & \\ \hline
-       5000 & & \\ \hline
-       Full & & \\ \hline 
+       500 & 3.13e-5 & 1.58e-4 \\ \hline 
+       1000 & 6.37e-5 & 5.98e-5 \\ \hline 
+       2000 & 1.41e-4 & 7.90e-5 \\ \hline 
+       5000 & 1.74e-4 & 6.35e-5\\ \hline 
+       Full & 2.51e-4 & 1.09e-4 \\ \hline 
     \end{tabular}
     \caption{Caption}
     \label{tab:my_label}

@@ -6,13 +6,16 @@ import numpy as np
 import pandas as pd
 import numpy as np
 
-def load_data(filename):
+def load_data(filename, labeled):
     x,y = [],[]
     with open(filename) as f:
         for line in f:
             line = line.strip().split(',')
-            x.append([float(a) for a in line[:-1]])
-            y.append(int(line[-1]))
+            if labeled:
+                x.append([float(a) for a in line[:-1]])
+                y.append(int(line[-1]))
+            else:
+                x.append([float(a) for a in line])
     return x, y
 
 def get_f1(clf, xv, yv):
@@ -69,32 +72,56 @@ def optimize_features(fisher_scores, threshold, x):
     new_x = []
     for i, j in enumerate(x):
         new_x.append([j[k] for k in selected_idx])
-    return new_x
+    return new_x 
 
 def main(args):
-    xt, yt = load_data(args.train_file)
-    xv, yv = load_data(args.test_file)
-    clf = svm.SVC()
+    xt, yt = load_data(args.train_file, True)
+    xv, yv = load_data(args.test_file, True)
+    clf = svm.SVC(probability=True)
     clf = clf.fit(xt, yt)
     print("Performance on Train:{}".format(clf.score(xt, yt)))
     print("Performance on Test:{}".format(clf.score(xv,yv)))
     print("F1 score:{}".format(get_f1(clf, xv, yv)))
+    ux, _ = load_data(args.augment_file, False) # unlabelled augmentable data
     if args.do_fisher_score:
         fisher_scores = get_fisher_score(xt, yt)
-        xt = optimize_features(fisher_scores, args.threshold, xt)
-        xv = optimize_features(fisher_scores, args.threshold, xv)
+        xt = optimize_features(fisher_scores, args.fisher_threshold, xt)
+        xv = optimize_features(fisher_scores, args.fisher_threshold, xv)
         print("###########################################")
-        print("Performance using fisher scores and a threshold of {}".format(args.threshold))
-        clf = svm.SVC()
+        print("Performance using fisher scores and a threshold of {}".format(args.fisher_threshold))
+        clf = svm.SVC(probability=True)
         clf = clf.fit(xt, yt)
         print("Performance on Train:{}".format(clf.score(xt, yt)))
         print("Performance on Test:{}".format(clf.score(xv,yv)))
         print("F1 score:{}".format(get_f1(clf, xv, yv)))
+        ux = optimize_features(fisher_scores, args.fisher_threshold, ux)
+    stx, sty = [], [] # self train x and self train y
+    for i, j in enumerate(ux):
+        probs_0 =  clf.predict_proba([j])[0][0]
+        probs_1 = 1 - probs_0
+        if abs(probs_0-probs_1) > args.threshold:
+            stx.append(j)
+            if probs_1 > probs_0:
+                sty.append(1)
+            else:
+                sty.append(0)
+    print("Using original classifier we find {} samples have a least a {} confidence margin toward one label".format(len(sty), args.threshold))
+    xt = xt + stx
+    yt = yt + sty
+    clf = svm.SVC(probability=True)
+    clf = clf.fit(xt, yt)
+    print("Performance on Train:{}".format(clf.score(xt, yt)))
+    print("Performance on Test:{}".format(clf.score(xv,yv)))
+    print("F1 score:{}".format(get_f1(clf, xv, yv)))
+
+    
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Apriori on grocery data')
     parser.add_argument('--train_file', default='HW1_dataset/audit_risk/train.csv', type=str, help='input train file')
     parser.add_argument('--test_file',default='HW1_dataset/audit_risk/test.csv', type=str, help='input test file')
-    parser.add_argument('--do_fisher_score', action='store_true', default=True, help='Do fisher score train data subseting')
-    parser.add_argument('--threshold', default=1.0, type=float, help='Threshold for min fisher score to keep columns')
+    parser.add_argument('--augment_file', default='HW1_dataset/audit_risk/unlabelled.csv', type=str, help='input unlabelled file')
+    parser.add_argument('--do_fisher_score', action='store_true', help='Do fisher score train data subseting')
+    parser.add_argument('--fisher_threshold', default=1.0, type=float, help='Threshold for fisher score feature selection')
+    parser.add_argument('--threshold', default=0.5, type=float, help='Threshold for min confidence to keep data point and label')
     args = parser.parse_args()
     main(args)    

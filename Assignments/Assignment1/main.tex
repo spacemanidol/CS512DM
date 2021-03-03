@@ -352,7 +352,7 @@ K_{RBF}(x, y)  &= exp [-1 \abs{x -y}^2] \\
 c :&= exp[-1\abs{x}^2-1\abs{y}^2 ] \\ \\
 K_{RBF}(x, y) &= c*e^{\lange x, y \rangle} \\
 &= c \sum_{n=0}^{\infty} \frac{(\langle x, y \rangle)^n}{n!}  \text{via taylor expansion of $e^x$}  \\ 
-&= c \sum_{n=0}^{\infty} \frac{K_{poly(n)}(x,y)}{n!}
+&= c \sum_{n=0}^{\infty} \frac{K_{poly(n)}(x,y)}{n!} \\
 \end{split}
 \end{equation}
 Thus we see that RBF is an infinite sum over poly kernels.
@@ -416,7 +416,7 @@ Using this amplified training data we find performance improvements on non Fishe
 \end{table}
 \section{Random Walk with Restart}
 \subsection{Capture multiple weighted relationships}
-Starting with the formula $r = cAr + (1 − c)e$ from the textbook(chapter 8 page 449) we can see that the RWR leverages information in the adjacency matrix but since the $e$ term is kept constant this modifier allows consistent steering of $r$. In doing so we can ensure that we keep tweaking $r$ to have the initial value for the query seed which allows for multiple path explorations.  
+Starting with the formula $r c*A*r +(1-c)*e$ from the textbook(chapter 8 page 449) we can see that the RWR leverages information in the adjacency matrix but since the $e$ term is kept constant this modifier allows consistent steering of $r$. In doing so we can ensure that we keep tweaking $r$ to have the initial value for the query seed which allows for multiple path explorations.  
 \subsection{RWR implemented}
 Top 10 nodes sorted by importance starting with a seed node of 42: 160, 121, 82, 107, 62, 434, 249, 183, 86, 166
 \end{document}

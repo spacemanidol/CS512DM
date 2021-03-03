@@ -4,7 +4,6 @@ import argparse
 import sys
 import numpy as np
 import pandas as pd
-import numpy as np
 
 def load_data(filename):
     x,y = [],[]
@@ -91,7 +90,7 @@ def main(args):
         print("Performance on Test:{}".format(clf.score(xv,yv)))
         print("F1 score:{}".format(get_f1(clf, xv, yv)))
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Apriori on grocery data')
+    parser = argparse.ArgumentParser(description='SVM with Fisher score')
     parser.add_argument('--train_file', default='HW1_dataset/audit_risk/train.csv', type=str, help='input train file')
     parser.add_argument('--test_file',default='HW1_dataset/audit_risk/test.csv', type=str, help='input test file')
     parser.add_argument('--do_fisher_score', action='store_true', default=True, help='Do fisher score train data subseting')

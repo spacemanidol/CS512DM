@@ -4,7 +4,6 @@ import argparse
 import sys
 import numpy as np
 import pandas as pd
-import numpy as np
 
 def load_data(filename, labeled):
     x,y = [],[]
@@ -116,7 +115,7 @@ def main(args):
 
     
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Apriori on grocery data')
+    parser = argparse.ArgumentParser(description='SVM with self-training')
     parser.add_argument('--train_file', default='HW1_dataset/audit_risk/train.csv', type=str, help='input train file')
     parser.add_argument('--test_file',default='HW1_dataset/audit_risk/test.csv', type=str, help='input test file')
     parser.add_argument('--augment_file', default='HW1_dataset/audit_risk/unlabelled.csv', type=str, help='input unlabelled file')

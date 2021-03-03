@@ -319,7 +319,7 @@ for $\langle ab \rangle$ see table \ref{tab:ab}, for $\langle (ab) \rangle$ see 
 \end{table}
 \subsubsection{Sequential Patterns}
 Sequential patterns where support = 3 and length $\ge 3$
-ABC I guess
+aca, abc, acd, dea, eab, bca, abd, afa, bce, add
 \subsection{Graph mining}
 \subsubsection{Support}
 P1 support is $\frac{4}{5}$ and is supported by G2, G3, G4, and G5. \\
@@ -335,7 +335,7 @@ see figure \ref{fig:graph-apri}
 \end{figure}
 \section{Problem 5: SVM, RBF Kernel}
 \subsection{Prove all eigenvalues are non negative}
-We know from other work that every semdefinite matrix only has non negative eigenvalues. 
+We know from other work that every semidefinite matrix only has non negative eigenvalues. 
 For a matrix to be semi-definite $x^TAx \ge 0$ for all $x \in \mathbf{R}^N $ . Since we know that $\text{k}(\bold{x}, \bold{x}') = \bold{x}^\top \bold{x}'$ to ensure semi-definite we ensure A > 0. Since A is the transform its always > 0. 
 \subsection{Prove RBF Kernel is the sum of infinite polynomial kernels}
 A kernel is any function in the form $K(x, y) = \langle \psi(x), \psi(y)\rangle$ where $\psi$ projects $x$ into a new vector space. \\
@@ -416,4 +416,7 @@ Using this amplified training data we find performance improvements on non Fishe
 \end{table}
 \section{Random Walk with Restart}
 \subsection{Capture multiple weighted relationships}
+Starting with the formula $r = cAr + (1 − c)e$ from the textbook(chapter 8 page 449) we can see that the RWR leverages information in the adjacency matrix but since the $e$ term is kept constant this modifier allows consistent steering of $r$. In doing so we can ensure that we keep tweaking $r$ to have the initial value for the query seed which allows for multiple path explorations.  
+\subsection{RWR implemented}
+Top 10 nodes sorted by importance starting with a seed node of 42: 160, 121, 82, 107, 62, 434, 249, 183, 86, 166
 \end{document}

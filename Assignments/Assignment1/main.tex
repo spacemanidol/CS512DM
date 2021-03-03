@@ -140,7 +140,7 @@ Using the updated frequency sorted ordering the updated transactional database i
 \end{table}
 Using this updated transaction database we create the pattern tree found in figure \ref{fig:fptree}.
 \begin{figure}[]
-\centering
+\centering1
 \includegraphics[width=8cm]{Assignments/Assignment1/FPtree.png}
 \caption{Frequent Pattern Tree}
 \label{fig:fptree}
@@ -336,11 +336,11 @@ see figure \ref{fig:graph-apri}
 \section{Problem 5: SVM, RBF Kernel}
 \subsection{Prove all eigenvalues are non negative}
 We know from other work that every semdefinite matrix only has non negative eigenvalues. 
-For a matrix to be semi-definite $x^TAx \ge 0$ for all $x \in \mathbf{R}^N $ . Since we know that $\text{k}(\bold{x}, \bold{x}') = \bold{x}^\top \bold{x}'$ to ensure semi-definite we ensure A > 0. Since A is the tranform its always > 0. 
+For a matrix to be semi-definite $x^TAx \ge 0$ for all $x \in \mathbf{R}^N $ . Since we know that $\text{k}(\bold{x}, \bold{x}') = \bold{x}^\top \bold{x}'$ to ensure semi-definite we ensure A > 0. Since A is the transform its always > 0. 
 \subsection{Prove RBF Kernel is the sum of infinite polynomial kernels}
 A kernel is any function in the form $K(x, y) = \langle \psi(x), \psi(y)\rangle$ where $\psi$ projects $x$ into a new vector space. \\
 We are trying to prove that $\psi_{RBF}: \mathbf{R}^N \rightarrow \mathbf{R}^\infty$. \\
-WLOG we set $\gama = 1$
+WLOG we set $\gamma = 1$
 \begin{equation}
 \begin{split}
 K_{RBF}(x, y)  &= exp [-1 \abs{x -y}^2] \\
@@ -368,7 +368,7 @@ If we were to use a large $\gamma$ we would likely be able to separate the train
 If we are to make the $\gamma$ infinitely large we will completely fit the SVM to the training data and overfit the model. Our training accuracy may reach 100\% but our transfer accuracy will suffer. This is because larger RBF kernel bandwidths(which are smaller $\gamma$ values produce a smoother feature space mapping. As we scale our $\gamma$ value we produce a less smooth kernel which will allow us to learn harder decision boundaries but will overfit to the decision boundary of the training corpus. 
 \section{Problem 6:Feature Selection}
 \subsection{Classification Results}
-On the test portion accuracy:0.68, precision:0.76, recall:0.38, F1 score:0.51
+On the test portion accuracy:0.68, precision:0.76, recall:0.38, F1 score:0.51. More detailed breakdown can be found in table \ref{tab:Accuracy}
 \begin{table}[]
     \centering
     \begin{tabular}{|c|c|c|} \hline
@@ -376,34 +376,43 @@ On the test portion accuracy:0.68, precision:0.76, recall:0.38, F1 score:0.51
        0 & 60 & 6 \\ \hline
        1 & 31 & 19 \\ \hline
     \end{tabular}
-    \caption{Projection for $\langle acba\rangle$}
+    \caption{SVM}
     \label{tab:Accuracy}
 \end{table}
 \subsection{Fisher Score Feature Selection}
-Using Fisher Score we change our data to ...
-Our accuracy is , Precision is , recall is , and F1 is 
+Using Fisher Score calculation and a threshold of $\ge$ 1 we find that only columns [8, 11, 18, 26] pass the threshold. We then remove all the other indexes and retrain our svm. Performance on train goes from 0.81 to 0.94 and performance on test goes from 0.68 to 0.84!  On the test portion accuracy:0.84, precision:0.88, recall:0.72, F1 score:0.79 . More detailed breakdown can be found in table \ref{tab:Accuracy2}
 \begin{table}[]
     \centering
     \begin{tabular}{|c|c|c|} \hline
        Reference Label  & Predicted 0 & Predict 1   \\ \hline
-       0 & & \\ \hline
-       1 & & \\ \hline
+       0 & 61 & 5 \\ \hline
+       1 & 36 & 14 \\ \hline
     \end{tabular}
-    \caption{Projection for $\langle acba\rangle$}
-    \label{tab:Accuracy}
+    \caption{Fisher Score Augmented SVM}
+    \label{tab:Accuracy2}
 \end{table}
 \section{Problem 7:Self Training}
-Using self training we ...
-Our accuracy is , Precision is , recall is , and F1 is 
+Using self training we first train an svm based on the regular training corpus(non fisher score adjusted). Then, we label the unlabeled corpus and only keep data where confidence is $\ge$ 0.6. By that we mean there is over a 0.6 difference between the confidence scores and we set the winning label to the self-trained label. Using this threshold of training we include 322 inferred label samples in our training data. \\
+Using this amplified training data we find performance improvements on non Fisher-score optimized models and fisher score optimized models. Without using fisher-score optimization the introduction of self-trained data improves F1 score from 0.51 to 0.55, recall goes from 0.38 to 0.42, precision goes from 0.76 to 0.78. More details available on self training model performance are available in table \ref{tab:Accuracy3}. Using fisher score optimization the amplified training data improves F1 from 0.79 to 0.80, recall goes from 0.72 to 0.74, precision goes from 0.88 to 0.86. More details about fisher+self training model performance are available in table \ref{tab:Accuracy4}
 \begin{table}[]
     \centering
     \begin{tabular}{|c|c|c|} \hline
        Reference Label  & Predicted 0 & Predict 1   \\ \hline
-       0 & & \\ \hline
-       1 & & \\ \hline
+       0 & 60 & 6 \\ \hline
+       1 & 29 & 21 \\ \hline
     \end{tabular}
-    \caption{Projection for $\langle acba\rangle$}
-    \label{tab:Accuracy}
+    \caption{Self-Training Augmented SVM}
+    \label{tab:Accuracy3}
+\end{table}
+\begin{table}[]
+    \centering
+    \begin{tabular}{|c|c|c|} \hline
+       Reference Label  & Predicted 0 & Predict 1   \\ \hline
+       0 & 60 & 6 \\ \hline
+       1 & 13 & 37 \\ \hline
+    \end{tabular}
+    \caption{Fisher Score and Self Training Augmented SVM}
+    \label{tab:Accuracy4}
 \end{table}
 \section{Random Walk with Restart}
 \subsection{Capture multiple weighted relationships}

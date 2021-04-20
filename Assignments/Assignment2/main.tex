@@ -168,18 +168,36 @@ Recall Score  & 0.8182/0.8421   & 0.9545/0.9474& \textbf{1.0/0.9474} \\ \hline
 \end{table}
 \section{Gaussian Mixture Model}
 \subsection{Compared with K-Means, what are the advantages and disadvantages of Gaussian mixture model}
-The advantages of GMM over KNN are related to how a Gaussian models a cluster. First off, since a GMM is a probability distribution we can get confidence scores for each of thes clusters which can help us decide if a data point may belong to more than one cluster. Additionally GMM can outperform KNN as they can man model more oblong clusters of data while KNN is limited to modeling circular clusters while Gaussian can become oblong shapes. This works well for data that does not have a circular distribution.  
+The advantages of GMM over KNN are related to how a Gaussian models a cluster. First off, since a GMM is a probability distribution we can get confidence scores for each of these clusters which can help us decide if a data point may belong to more than one cluster. Additionally GMM can outperform KNN as they can man model more oblong clusters of data while KNN is limited to modeling circular clusters while Gaussian can become oblong shapes. This works well for data that does not have a circular distribution.  \\
 
-The disadvantages of GMM are mostly related to the model size. There are a lot of parameters to fit which means that there are many iterations and large data is required for training. If there are few samples in the train dataset KNN may still have good performance while GMM will likley not.
+The disadvantages of GMM are mostly related to the model size. There are a lot of parameters to fit which means that there are many iterations and large data is required for training. If there are few samples in the train dataset KNN may still have good performance while GMM will likely not.
 \subsection{E-Step:Prove that the posterior probability of the k-th component $\rho_{i,j}$}
 \subsection{M-Step:Prove that the new estimations of $\mu_k$, $\sigma_k$, $\pi_k$}
 \section{Graph Connectivity and SIS model}
 \subsection{Implement the Susceptible-Infected-Susceptible and graph number of people in each group}
 For the initial implementation there are an average of 6876.03 infected nodes
 after the convergence(200-300 iterations). The plot for susceptible and infected individuals can be found  in figure \ref{fig:sis}
+\begin{figure}
+    \centering
+    \includegraphics{Assignments/Assignment2/sis.png}
+    \caption{Effect of Random Vaccination in virus propagation}
+    \label{fig:sis}
+\end{figure}
 \subsection{Vaccination}
 For random vaccination of 200 nodes the average infected nodes after convergence is 6645.46 and the plot for susceptible and infected individuals can be found  in figure \ref{fig:vacrand}.
 For those with highest degree there is an average  6215.99
+\begin{figure}
+    \centering
+    \includegraphics{Assignments/Assignment2/random-vac.png}
+    \caption{Effect of Random Vaccination in virus propagation}
+    \label{fig:vacrand}
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics{Assignments/Assignment2/random-vac.png}
+    \caption{Effect of Random Vaccination in virus propagation}
+    \label{fig:vacrand}
+\end{figure}
 \subsection{More Vaccination}
 Strategy: vaccinate those with highest probability(related to an infected node)
 Strategy: most connected to other nodes 2 hops away

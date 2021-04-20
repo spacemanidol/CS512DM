@@ -38,9 +38,9 @@ The update is derived from $\frac{\partial L}{\partial w_{i,j}} = -\partial_j O_
 Derive the equation which computes the error for the output unit $U_10$ 
 First, We know that with the cross entropy error function where D is the sample being evaluated $L= -\sum_k [t_k *log(o_k) + (1-t_k)log(1-o_k)]$. This becomes \\
 $\frac{\partial L}{\partial O} = \frac{\partial}{\partial O} \sum_k [t_k log(O_k) + (1-t_k)log(1-o_k)$ . \\
-$\frac{\partial L}{\partial O} = \frac{\partial}{\partial O} t log(O) - \frac{\partial}{\partial O} (1-t)log(1-O) .. \\
-$\frac{\partial L}{\partial O} = \frac{t}{O} + \frac{1-t}{1-O}. \\
-This means in turn that the $\partial_10 = (\frac{t}{O} + \frac{1-t}{1-O})$
+$\frac{\partial L}{\partial O} = \frac{\partial}{\partial O} t log(O) - \frac{\partial}{\partial O} (1-t)log(1-O)$ . \\
+$\frac{\partial L}{\partial O} = \frac{t}{O} + \frac{1-t}{1-O}$. \\
+This means in turn that the $\partial_{10} = (\frac{t}{O} + \frac{1-t}{1-O})$
 \subsection{2D Convolution}
 \subsubsection{Compute the feature maps by applying kernel $K_1$, $K_2$ (stride = 1)}
 First its important to note that because there is no specification about what form of padding to use I am not using any padding. This means that our 5x5 input becomes a 4x4 output. The feature map after applying $K_1$ can be found in table \ref{tab:conv1-k1} and the feature map after applying $K_2$ can be found in table \ref{tab:conv1-k2}. 
@@ -83,41 +83,42 @@ Average pooling for the feature map extracted by using kernel $K_1$ can be found
 \label{tab:conv1-k2-average}
 \end{table}
 \subsection{Graph Convolutional Networks}
-\subsubsection{Is this task inductive learning or transductive learning
+\subsubsection{Is this task inductive learning or transductive learning}
 This is inductive learning because we only see a portion of the dataset while training (the train portion: 60\%) and then we apply the learned model on dataset it has never seen before (validation/eval data portions)
-The main difference is that during transductive learning, you have already encountered both the training and testing datasets when training the model. However, inductive learning encounters only the training data when training the model and applies the learned model on a dataset which it has never seen before}
+The main difference is that during transductive learning, you have already encountered both the training and testing datasets when training the model. However, inductive learning encounters only the training data when training the model and applies the learned model on a dataset which it has never seen before.
 \subsubsection{Implement this model and evaluate and report accuracy}
 Final Loss on eval: 0.8361107707023621 and final accuracy:0.7458563535911602
 \subsection{Vary the optimizer and learning rate strategies and report numbers}
 First, using ADAM I vary the learning rate and training length as seen in table \ref{tab:1d}. Next, I vary the best LR (1e-1 ) and experiment with ADAM across SGD, and RMSProp finding ADAM to be the best as shown in table \ref{tab:1de}
 \begin{table}[]
-\begin{tabular}{|l|l|l|} \hline
+\begin{tabular}{|l|l|l|l|} \hline
 Learning Rate & Updates & Loss & Accuracy \\ \hline
 1e-1 & 100  & 0.7455894351005554 & 0.7495395948434622 \\ \hline
 1e-1 & 1000  & 0.6971593499183655 & 0.7569060773480664 \\ \hline
-1e-1 & 10000  & 0.6468987464904785 & 0.7992633517495397 \\ \hline
+1e-1 & 10000  & \textbf{0.6468987464904785} & \textbf{0.7992633517495397}  \\ \hline
 1e-2 & 100 & 1.1029239892959595 & 0.6611418047882136 \\ \hline
 1e-2 & 1000  & 0.6627088189125061 & 0.7808471454880295 \\ \hline
 1e-2 & 10000  & 0.6523106694221497 & 0.7974217311233887 \\ \hline
-1e-3 & 100  & 1.832948923110962 & 0.3020257826887661 \ \hline
-1e-3 & 1000  & 1.0243993997573853 & 0.6758747697974218 \ \hline
+1e-3 & 100  & 1.832948923110962 & 0.3020257826887661 \\ \hline
+1e-3 & 1000  & 1.0243993997573853 & 0.6758747697974218 \\ \hline
 1e-3 & 10000  & 0.6788013577461243 & 0.7808471454880295 \\ \hline
-1e-4 & 100  & 1.9703178405761719 & 0.0865561694290976 \ \hline
-1e-4 & 1000  & 1.8301498889923096 & 0.3020257826887661 \ \hline
+1e-4 & 100  & 1.9703178405761719 & 0.0865561694290976 \\ \hline
+1e-4 & 1000  & 1.8301498889923096 & 0.3020257826887661 \\ \hline
 1e-4 & 10000  & 1.0697520971298218 & 0.6666666666666667 \\ \hline
 1e-5 & 100  & 1.9364348649978638 & 0.18968692449355434 \\ \hline
 1e-5 & 1000  & 1.9022825956344604 & 0.3001841620626151 \\ \hline
 1e-5 & 10000  & 1.8908064365386963 & 0.27808471454880296 \\ \hline
 \end{tabular}
+\caption{Effect of varying learning rate and training duration for GCN}
 \label{tab:1d}
 \end{table}
 
 \begin{table}[]
-\begin{tabular}{|l|l|l|} \hline
+\begin{tabular}{|l|l|l|l|} \hline
 Optimizer & Updates & Loss & Accuracy \\ \hline
 ADAM & 100   & 0.7455894351005554 & 0.7495395948434622 \\ \hline
 ADAM & 1000   & 0.6971593499183655 & 0.7569060773480664 \\ \hline
-ADAM & 10000 & 0.6468987464904785 & 0.7992633517495397 \\ \hline
+ADAM & 10000 & \textbf{0.6468987464904785} & \textbf{0.7992633517495397} \\ \hline
 SGD & 100  & 1.822108507156372 & 0.3020257826887661 \\ \hline
 SGD & 1000   & 1.05472731590271 & 0.6261510128913444 \\ \hline
 SGD & 10000   & 0.8426060676574707 & 0.7679558011049724 \\ \hline
@@ -125,6 +126,7 @@ RMSProp & 100  & 1.5735245943069458 & 0.40699815837937386 \\ \hline
 RMSProp & 1000  & 1.5078521966934204 & 0.3830570902394107 \\ \hline
 RMSProp & 10000  & 1.0892350673675537 & 0.5948434622467772 \\ \hline
 \end{tabular}
+\caption{Effect of varying optimizer and training duration for GCN}
 \label{tab:1de}
 \end{table}
 \subsubsection{If the number of GCN layers increase how does the model performance change in terms of quality and efficiency}
@@ -138,32 +140,48 @@ This method will miss any value that is an outlier on small scale (both close to
 \subsection{Implementation using $PyOD^3$}
 The three methods I ran were KNN, PCA, and VAE results for runs on vowels.mat can be found in table \ref{tab:vowels} and results for runs on satimage-2 can be found in table \ref{tab:satimage}. At a broad level we see that more simple data like that of vowels, KNN performs best(and trained fastest) but as data gets harder Neural (VAE) and more complex methods (PCA) out perform. That being said neither PCA or VAE achieves the highest of scores on the satellite data as the feature space is small. 
 \begin{table}[]
-\begin{tabular}{|l|l|l|l|}
+\begin{tabular}{|l|l|l|l|} \hline
 Metric        & KNN & PCA     & VAE  \\ \hline
 Precision @10 & 0.00/0.00       & 0.00/0.0    &  0.00/0.0   \\ \hline
 Precision @20 & 0.00/0.00       & 0.00/0.0    &  0.00/0.0     \\ \hline
-Precision @50 & 0.4/0.3571      & 0.1429/0.105 & 0.1538/0.1136 \\ \hline
-Precision @100 & 0.4/0.3571      & 0.1429/0.1053 & 0.1538/0.1136 \\ \hline
-ROC AUC Score & 0.8868/0.8955   & 0.6336/0.6267 & 0.6372/0.6625 \\ \hline
-Recall Score  & 0.8235/0.8333   & 0.3529/0.3333 & 0.3529/0.4167 \hline
+Precision @50 & \textbf{0.4/0.3571}      & 0.1429/0.105 & 0.1538/0.1136 \\ \hline
+Precision @100 & \textbf{0.4/0.3571}      & 0.1429/0.1053 & 0.1538/0.1136 \\ \hline
+ROC AUC Score & \textbf{0.8868/0.8955}   & 0.6336/0.6267 & 0.6372/0.6625 \\ \hline
+Recall Score  & \textbf{0.8235/0.8333}   & 0.3529/0.3333 & 0.3529/0.4167 \\ \hline
 \end{tabular}
 \caption{Model performance on vowel dataset vowels.mat}
 \label{tab:vowels}
 \end{table}
 \begin{table}[]
-\begin{tabular}{|l|l|l|l|}
+\begin{tabular}{|l|l|l|l|}\hline
 Metric        & KNN & PCA     & VAE  \\ \hline
-Precision @10 & 0.00/0.00       & 0.00/0.0    &  0.00/0.0   \\ \hline
-Precision @20 & 0.00/0.00       & 0.00/0.0    &  0.00/0.0   \\ \hline
-Precision @50 & 0.00/0.00       & 0.00/0.0    &  0.00/0.0   \\ \hline
-Precision @100 & 0.00/0.00       & 0.00/0.0    &  0.00/0.0   \\ \hline
-ROC AUC Score & 0.8666/0.8691   & 0.9331/0.9304 & 0.9546/0.9252 \\ \hline
-Recall Score  & 0.8182/0.8421   & 0.9545/0.9474 & 1.0/0.9474 \hline
+Precision @10 & 0.00/0.00       & 0.00/0.0     &  0.00/0.0   \\ \hline
+Precision @20 & 0.00/0.00       & 0.00/0.0     &  0.00/0.0   \\ \hline
+Precision @50 & 0.00/0.00       & 0.00/0.0     &  0.00/0.0   \\ \hline
+Precision @100 & 0.00/0.00      & 0.00/0.0     &  0.00/0.0   \\ \hline
+Precision @1000 & 0.0914/0.0983 & \textbf{0.1024/0.1264} & 0.0994/0.1223  \\ \hline
+ROC AUC Score & 0.8666/0.8691   & 0.9331/0.9304& \textbf{0.9546/0.9252} \\ \hline
+Recall Score  & 0.8182/0.8421   & 0.9545/0.9474& \textbf{1.0/0.9474} \\ \hline
 \end{tabular}
 \caption{Model performance on Satellite images dataset satimage-2.mat}
 \label{tab:satimage}
 \end{table}
 \section{Gaussian Mixture Model}
 \subsection{Compared with K-Means, what are the advantages and disadvantages of Gaussian mixture model}
+The advantages of GMM over KNN are related to how a Gaussian models a cluster. First off, since a GMM is a probability distribution we can get confidence scores for each of thes clusters which can help us decide if a data point may belong to more than one cluster. Additionally GMM can outperform KNN as they can man model more oblong clusters of data while KNN is limited to modeling circular clusters while Gaussian can become oblong shapes. This works well for data that does not have a circular distribution.  
 
+The disadvantages of GMM are mostly related to the model size. There are a lot of parameters to fit which means that there are many iterations and large data is required for training. If there are few samples in the train dataset KNN may still have good performance while GMM will likley not.
+\subsection{E-Step:Prove that the posterior probability of the k-th component $\rho_{i,j}$}
+\subsection{M-Step:Prove that the new estimations of $\mu_k$, $\sigma_k$, $\pi_k$}
+\section{Graph Connectivity and SIS model}
+\subsection{Implement the Susceptible-Infected-Susceptible and graph number of people in each group}
+For the initial implementation there are an average of 6876.03 infected nodes
+after the convergence(200-300 iterations). The plot for susceptible and infected individuals can be found  in figure \ref{fig:sis}
+\subsection{Vaccination}
+For random vaccination of 200 nodes the average infected nodes after convergence is 6645.46 and the plot for susceptible and infected individuals can be found  in figure \ref{fig:vacrand}.
+For those with highest degree there is an average  6215.99
+\subsection{More Vaccination}
+Strategy: vaccinate those with highest probability(related to an infected node)
+Strategy: most connected to other nodes 2 hops away
+Strategy: spread random but one per cluster
 \end{document}

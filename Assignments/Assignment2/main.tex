@@ -176,7 +176,7 @@ The disadvantages of GMM are mostly related to the model size. There are a lot o
 \section{Graph Connectivity and SIS model}
 \subsection{Implement the Susceptible-Infected-Susceptible and graph number of people in each group}
 For the initial implementation there are an average of 6876.03 infected nodes
-after the convergence(200-300 iterations). The plot for susceptible and infected individuals can be found  in figure \ref{fig:sis}
+after the convergence(200-300 iterations). The plot for susceptible and infected individuals can be found  in figure \ref{fig:sis}.
 \begin{figure}
     \centering
     \includegraphics{Assignments/Assignment2/sis.png}
@@ -185,7 +185,7 @@ after the convergence(200-300 iterations). The plot for susceptible and infected
 \end{figure}
 \subsection{Vaccination}
 For random vaccination of 200 nodes the average infected nodes after convergence is 6645.46 and the plot for susceptible and infected individuals can be found  in figure \ref{fig:vacrand}.
-For those with highest degree there is an average  6215.99
+For those with highest degree there is an average we achieve a slightly lower rate of 6215.99 and the plot for infection growth over time can be found in figure \ref{fig:highdegree}.
 \begin{figure}
     \centering
     \includegraphics{Assignments/Assignment2/random-vac.png}
@@ -194,12 +194,31 @@ For those with highest degree there is an average  6215.99
 \end{figure}
 \begin{figure}
     \centering
-    \includegraphics{Assignments/Assignment2/random-vac.png}
-    \caption{Effect of Random Vaccination in virus propagation}
-    \label{fig:vacrand}
+    \includegraphics{Assignments/Assignment2/high-degree.png}
+    \caption{Effect of High Degree Vaccination in virus propagation}
+    \label{fig:highdegree}
 \end{figure}
 \subsection{More Vaccination}
-Strategy: vaccinate those with highest probability(related to an infected node)
-Strategy: most connected to other nodes 2 hops away
-Strategy: spread random but one per cluster
+I explore three strategies for vaccination: proximity to infected nodes at time step 0, highest connection via 2 hops, random walk. \\
+For proximity to infected nodes I generate a ranking by how heavily nodes are connected to infected node. The 200 susceptible nodes with highest connection to infected nodes become vaccinated. This averages to 6342.96 infected individuals after convergence and results over time can be seen in figure \ref{fig:infection}. This method is more effective than any random method but not as effective at vaccinating the highest degree nodes. \\
+For highest connection via two hop we build on the notion of highest degree nodes but take the highest number of nodes available within 2 hops (Node-Edge-Node). This averages to 6335.06 infected individuals after convergence and results over time can be seen in figure \ref{fig:2hop}. \\
+For Random walk we start at an random node and vaccinate it and then walk to one of its edges and make that our new vaccination node. We continue this process until we have used all of our vaccination. This averages to 6620.56 infected individuals after convergence and results over time can be seen in figure \ref{fig:randwalk}. We can see this method is more effective than random but not by much.
+\begin{figure}
+    \centering
+    \includegraphics{Assignments/Assignment2/two_hop.png}
+    \caption{Effect of Two Hop Vaccination in virus propagation}
+    \label{fig:2hop}
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics{Assignments/Assignment2/infection-proximity.png}
+    \caption{Effect of Infection proximity Vaccination in virus propagation}
+    \label{fig:infection}
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics{Assignments/Assignment2/random-walk.png}
+    \caption{Effect of Random Walk Vaccination in virus propagation}
+    \label{fig:randwalk}
+\end{figure}
 \end{document}

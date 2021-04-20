@@ -2,104 +2,63 @@ import os
 import argparse
 import sys
 import numpy as np
-import math
-import scipy.sparse as sp
-
 from mat4py import loadmat
 from pyod.models.vae import VAE
-from pyod.models.pca import 
-data = loadmat('vowels.mat')
+from pyod.models.pca import PCA
 from pyod.models.knn import KNN   # kNN detector
-
-# train kNN detector
-clf_name = 'KNN'
-clf = KNN()
-clf.fit(X_train)
-
-# get the prediction label and outlier scores of the training data
-y_train_pred = clf.labels_  # binary labels (0: inliers, 1: outliers)
-y_train_scores = clf.decision_scores_  # raw outlier scores
-
-# get the prediction on the test data
-y_test_pred = clf.predict(X_test)  # outlier labels (0 or 1)
-y_test_scores = clf.decision_function(X_test) 
-
-# train PCA detector
-    clf_name = 'PCA'
-    clf = PCA(n_components=3)
-    clf.fit(X_train)
-
-    # get the prediction labels and outlier scores of the training data
-    y_train_pred = clf.labels_  # binary labels (0: inliers, 1: outliers)
-    y_train_scores = clf.decision_scores_  # raw outlier scores
-
-    # get the prediction on the test data
-    y_test_pred = clf.predict(X_test)  # outlier labels (0 or 1)
-    y_test_scores = clf.decision_function(X_test)  # outlier scores
-
-    # evaluate and print the results
-    print("\nOn Training Data:")
-    evaluate_print(clf_name, y_train, y_train_scores)
-    print("\nOn Test Data:")
-    evaluate_print(clf_name, y_test, y_test_scores)
-
-     # train VAE detector (Beta-VAE)
-    clf_name = 'VAE'
-    clf = VAE(epochs=30, contamination=contamination, gamma=0.8, capacity=0.2)
-    clf.fit(X_train)
-
-    # get the prediction labels and outlier scores of the training data
-    y_train_pred = clf.labels_  # binary labels (0: inliers, 1: outliers)
-    y_train_scores = clf.decision_scores_  # raw outlier scores
-
-    # get the prediction on the test data
-    y_test_pred = clf.predict(X_test)  # outlier labels (0 or 1)
-    y_test_scores = clf.decision_function(X_test)  # outlier scores
-
-    # evaluate and print the results
-    print("\nOn Training Data:")
-    evaluate_print(clf_name, y_train, y_train_scores)
-    print("\nOn Test Data:")
-    evaluate_print(clf_name, y_test, y_test_scores)
 from sklearn.metrics import roc_curve
 from sklearn.metrics import roc_auc_score
-from matplotlib import pyplot
-# generate 2 class dataset
-X, y = make_classification(n_samples=1000, n_classes=2, random_state=1)
-# split into train/test sets
-trainX, testX, trainy, testy = train_test_split(X, y, test_size=0.5, random_state=2)
-# generate a no skill prediction (majority class)
-ns_probs = [0 for _ in range(len(testy))]
-# fit a model
-model = LogisticRegression(solver='lbfgs')
-model.fit(trainX, trainy)
-# predict probabilities
-lr_probs = model.predict_proba(testX)
-# keep probabilities for the positive outcome only
-lr_probs = lr_probs[:, 1]
-# calculate scores
-ns_auc = roc_auc_score(testy, ns_probs)
-lr_auc = roc_auc_score(testy, lr_probs)
-# summarize scores
-print('No Skill: ROC AUC=%.3f' % (ns_auc))
-print('Logistic: ROC AUC=%.3f' % (lr_auc))
-# calculate roc curves
-ns_fpr, ns_tpr, _ = roc_curve(testy, ns_probs)
-lr_fpr, lr_tpr, _ = roc_curve(testy, lr_probs)
-# plot the roc curve for the model
-pyplot.plot(ns_fpr, ns_tpr, linestyle='--', label='No Skill')
-pyplot.plot(lr_fpr, lr_tpr, marker='.', label='Logistic')
-# axis labels
-pyplot.xlabel('False Positive Rate')
-pyplot.ylabel('True Positive Rate')
-# show the legend
-pyplot.legend()
-# show the plot
-pyplot.show()
-\
-sklearn.metrics.roc_curve(y_true, y_score, *, pos_label=None, sample_weight=None, drop_intermediate=True)[source]
+from sklearn.metrics import recall_score
+from sklearn.model_selection import train_test_split
+from pyod.utils.utility import precision_n_scores
+
+def print_metrics(y, y_pred):
+    print("Precision @10:{}".format(np.round(precision_n_scores(y, y_pred, n=10),4)))
+    print("Precision @20:{}".format(np.round(precision_n_scores(y, y_pred, n=20),4)))
+    print("Precision @50:{}".format(np.round(precision_n_scores(y, y_pred, n=50),4)))
+    print("Precision @100:{}".format(np.round(precision_n_scores(y, y_pred, n=100),4)))
+    print("Precision @1000:{}".format(np.round(precision_n_scores(y, y_pred, n=1000),4)))
+    print("ROC AUC Score:{}".format(np.round(roc_auc_score(y, y_pred),4)))
+    print("Recall Score:{}".format(np.round(recall_score(y, y_pred),4)))
+
+def main(args):
+    data = loadmat(args.filename)
+    trainx, testx, trainy, testy = train_test_split(data['X'], data['y'], test_size=args.train_split, random_state=2)
+    valx, evalx, valy, evaly = train_test_split(testx, testy, test_size=0.5)
+    data_size = len(trainx[0])
+    encoder_neurons = [data_size, data_size/2, data_size/4]
+    clf = KNN()
+    clf.fit(trainx)
+    print("Results Validation KNN")
+    print_metrics(valy, clf.predict(valx))
+    print("Results Evaluation KNN")
+    print_metrics(evaly, clf.predict(evalx))
+
+    clf = PCA(n_components=args.components)
+    clf.fit(trainx)
+    print("Results Validation PCA")
+    print_metrics(valy, clf.predict(valx))
+    print("Results Evaluation PCA")
+    print_metrics(evaly, clf.predict(evalx))
+
+    clf = VAE(encoder_neurons=encoder_neurons, decoder_neurons=encoder_neurons[::-1], epochs=args.epochs, contamination=args.contamination, gamma=args.gamma, capacity=args.capacity)
+    clf.fit(trainx)
+    print("Results Validation VAE")
+    print_metrics(valy, clf.predict(valx))
+    print("Results Evaluation VAE")
+    print_metrics(evaly, clf.predict(evalx))
+    
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='PYOD3')
-    parser.add_argument('--optim', default='adam', type=str, help='Optimizer. Options are adam, sgd and rmsprop')
+    parser.add_argument('--components', default=3, type=int, help='Number of PCA components')
+    parser.add_argument('--contamination', default=0.1, type=float, help='Percent of samples outliers')
+    parser.add_argument('--capacity', default=0.2, type=float, help='VAE capacity')
+    parser.add_argument('--gamma', default=0.8, type=float, help='Gamma value for VAE')
+    parser.add_argument('--epochs', default=30, type=int, help='Epochs to train VAE')
+    parser.add_argument('--method', default='KNN', choices=['KNN','PCA', 'VAE'], type=str, help='Outlier detection method')
+    parser.add_argument('--train_split', default=0.6, type=float, help='Percent of samples going to train')
+    parser.add_argument('--filename', default='CS512_HW2_dataset/vowels.mat', type=str, help='MAT file to run Outlier Detection on')
     args = parser.parse_args()
     main(args)    

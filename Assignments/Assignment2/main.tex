@@ -136,9 +136,34 @@ One definition of an outlier would be a data point that differs so much from the
 \subsection{What is the disadvantage of describing outliers as any point that is larger than the majority of values? How do we modify our definition of outliers to avoid this problem? Use examples }
 This method will miss any value that is an outlier on small scale (both close to 0 and negative) and also will fail to take into account natural distribution of large values. One way to avoid this problem is to build a notion of outliers based on the distribution of the data like Grubbs test. Instead of calling extremely large values outliers we refer to values which our outside of a Gaussian distribution as outliers. 
 \subsection{Implementation using $PyOD^3$}
-Run 3 methods where at least 1 is neural network based on each of the datasets and evaluate performance using Precision/Recall @ k where K=10, 20, 50.
-Create ROC curves for the various metrics. 
+The three methods I ran were KNN, PCA, and VAE results for runs on vowels.mat can be found in table \ref{tab:vowels} and results for runs on satimage-2 can be found in table \ref{tab:satimage}. At a broad level we see that more simple data like that of vowels, KNN performs best(and trained fastest) but as data gets harder Neural (VAE) and more complex methods (PCA) out perform. That being said neither PCA or VAE achieves the highest of scores on the satellite data as the feature space is small. 
+\begin{table}[]
+\begin{tabular}{|l|l|l|l|}
+Metric        & KNN & PCA     & VAE  \\ \hline
+Precision @10 & 0.00/0.00       & 0.00/0.0    &  0.00/0.0   \\ \hline
+Precision @20 & 0.00/0.00       & 0.00/0.0    &  0.00/0.0     \\ \hline
+Precision @50 & 0.4/0.3571      & 0.1429/0.105 & 0.1538/0.1136 \\ \hline
+Precision @100 & 0.4/0.3571      & 0.1429/0.1053 & 0.1538/0.1136 \\ \hline
+ROC AUC Score & 0.8868/0.8955   & 0.6336/0.6267 & 0.6372/0.6625 \\ \hline
+Recall Score  & 0.8235/0.8333   & 0.3529/0.3333 & 0.3529/0.4167 \hline
+\end{tabular}
+\caption{Model performance on vowel dataset vowels.mat}
+\label{tab:vowels}
+\end{table}
+\begin{table}[]
+\begin{tabular}{|l|l|l|l|}
+Metric        & KNN & PCA     & VAE  \\ \hline
+Precision @10 & 0.00/0.00       & 0.00/0.0    &  0.00/0.0   \\ \hline
+Precision @20 & 0.00/0.00       & 0.00/0.0    &  0.00/0.0   \\ \hline
+Precision @50 & 0.00/0.00       & 0.00/0.0    &  0.00/0.0   \\ \hline
+Precision @100 & 0.00/0.00       & 0.00/0.0    &  0.00/0.0   \\ \hline
+ROC AUC Score & 0.8666/0.8691   & 0.9331/0.9304 & 0.9546/0.9252 \\ \hline
+Recall Score  & 0.8182/0.8421   & 0.9545/0.9474 & 1.0/0.9474 \hline
+\end{tabular}
+\caption{Model performance on Satellite images dataset satimage-2.mat}
+\label{tab:satimage}
+\end{table}
 \section{Gaussian Mixture Model}
-\subsection{Compared with K-Means, what are the advantages and disadvantages of Gaussian mixute model}
+\subsection{Compared with K-Means, what are the advantages and disadvantages of Gaussian mixture model}
 
 \end{document}

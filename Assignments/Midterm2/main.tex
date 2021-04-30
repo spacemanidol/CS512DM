@@ -1,0 +1,34 @@
+\documentclass[11pt]{article}
+
+\usepackage{alltt,fullpage,graphics,color,epsfig,amsmath, amssymb}
+\usepackage{hyperref}
+\usepackage{boxedminipage}
+\usepackage[ruled,vlined]{algorithm2e}
+\usepackage{amsmath}
+\usepackage{commath}
+\usepackage{graphicx}
+\graphicspath{ {.} }
+\newcommand{\floor}[1]{\lfloor #1 \rfloor}
+\newcommand{\ceil}[1]{\lceil #1 \rceil}
+\title{CS 512 Midterm 2}
+\author{Daniel Campos}
+\date{April 30th,2021}
+\begin{document}
+\maketitle
+\section{Short Questions}
+\subsection{True Or False}
+\subsubsection{For the Susceptible-Infected-Susceptible (SIS) model on network, whether there will be an epidemic is related with the selection of initial infected nodes.}
+False, initial selection of infected nodes can effect if there is an epidemic but an epidemic for SIS is determined by the infection rate $\beta$ and the recovery rate $\delta$ if the $\beta$ is high and the $\delta$ is low few initalizations can effect epidemic or not and alternatively if $\beta$ is low and $\delta$ is high few initialization can cause an epidemic.
+\subsubsection{Node attribute can provide effective assistance for network alignment task}
+True. Methods such as Final: Attributed Network Alignment leverages the intuition that similar node-pairs share similar node attributes to predict aligment.
+\subsubsection{Initializing all the weights with 0 during training will prevent the neural network from learning.}
+False. If all weights are initialized to zero then the derivative for each weight in the network will be identical. Since each weight is identical each weight will receive the same update and the values in the network will always be equal $w_i = w_j \forall j \in N$. As a result, the network will produce poor results for any constant initialization. The network is technically learning as weight values are updating but it is very unlikely to learn a good representation of the data. 
+\subsubsection{Stochastic gradient descent (SGD) can help getting out of local minimums of the loss function}
+True. SGD is more able to avoid getting stuck at local minima for the entire dataset because it is randomly sampling a batch from the dataset. Since it is not optimizing on the entire dataset at each step it is possible that the network has a loss on the entire dataset it cannot escape but eventually a random batch of the data could be different causing the network to leave the local minimum.
+\subsubsection{If we randomly shuffle the order of nodes in a graph, we can have different results (e.g., node classification) from the GCN model.}
+True. In a graph random shuffling of a graph does not change the graph but since GCN's rely on convolution shuffling node order will cause different outcomes. It worth noting that there are solutions to such as Simple Permutation-Invariant Graph
+Convolutional Network and more regularly applied node ordering.
+\subsection{Short Answer Questions}
+
+
+\end{document}

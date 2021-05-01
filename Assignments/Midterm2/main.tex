@@ -7,9 +7,26 @@
 \usepackage{amsmath}
 \usepackage{commath}
 \usepackage{graphicx}
+\usepackage{amssymb,amsmath}
+\usepackage{tikz}
+
+\newcommand{\circleland}{ 
+  \mathbin{
+    \mathchoice
+      {\buildcircleland{\displaystyle}}
+      {\buildcircleland{\textstyle}}
+      {\buildcircleland{\scriptstyle}}
+      {\buildcircleland{\scriptscriptstyle}}
+  } 
+}
 \graphicspath{ {.} }
 \newcommand{\floor}[1]{\lfloor #1 \rfloor}
 \newcommand{\ceil}[1]{\lceil #1 \rceil}
+\newcommand\buildcircleland[1]{%
+  \begin{tikzpicture}[baseline=(X.base), inner sep=0, outer sep=0]
+    \node[draw,circle] (X)  {$#1 x$};
+  \end{tikzpicture}%
+}
 \title{CS 512 Midterm 2}
 \author{Daniel Campos}
 \date{April 30th,2021}
@@ -79,14 +96,13 @@ weight & New Value \\ \hline
 $w_{4,6}$ & 0.3 -(0.1)(0.117649)(0.1)= 0.29882351\\ \hline 
 $w_{1,5}$ & 0.3-(0.1)(-0.052706752)(1) = 0.3052706752 \\ \hline
 \end{tabular}
-\caption{Errors of  4,5,6}
+\caption{New Weights for 4,5,6}
 \label{tab:newweight}
 \end{table}
 \subsection{Suppose we do not apply zero-paddings, what are the dimensions of the feature maps after hidden layer 4? Please show the key steps of calculation}
 After the first layer our feature map becomes 28*28*16 due to the the 16 filters and loosing 2 on each side of the 5x5 convolution. After max pool the size is 14x14*16 as max pool reduces 2x2 to 1x1. After the second convolutional layer the feature map is 12*12*32 because our 3x3 convolutions loses 1 on each dimension. Layer 4 then applies max pool which gives a size of 6x6x32 which is the answer to the question. Layer 5 produces a 1x1152
 \subsection{How many weights does the architecture have? What advantage of CNN do you observe compared with fully-connected layer during the computation?}
-The parameters we have are $p(CCN1) + p(CNN2) +p(FFN) + output$ since max pool and flatten have no parameters. This means $params = 16*5*5*3+32*3*3*16+1152*256+256*1= 1200+4608+294912+256 = 300,976$ parameters
-The architecture has * Weights. The advantages of a CNN vs FFN is faster training/inference because the relative sparsity of the network. Instead of having fully connected layers at each level there are sparsely connected layers which means the number of parameters and computations is orders of magnitude less.
+The parameters we have are $p(CCN1) + p(CNN2) +p(FFN) + output$ since max pool and flatten have no parameters. This means $params = 16*5*5*3+32*3*3*16+1152*256+256*1= 1200+4608+294912+256 = 300,976$ parameters. \\ The advantages of a CNN vs FFN is faster training/inference because the relative sparsity of the network. Instead of having fully connected layers at each level there are sparsely connected layers which means the number of parameters and computations is orders of magnitude less.
 \subsection{ Compute the output features after applying one spectral-based GCN layer}
 $Z = D^{-0.5}AD^{-0.5}X\theta$ where $D = [[2,0,0,0,0],[0,3,0,0,0],[0,0,3,0,0],[0,0,0,3,0],[0,0,0,0,3]]$ and $A=[[0,1,0,0,1],[1,0,1,1,0],[0,1,0,1,1],[0,1,1,0,1],[1,0,1,1,0]]$ so Z = [[-0. ,  0.6],
        [-0.3,  0. ],
@@ -97,7 +113,7 @@ $Z = D^{-0.5}AD^{-0.5}X\theta$ where $D = [[2,0,0,0,0],[0,3,0,0,0],[0,0,3,0,0],[
 Starting with the Binary cross entropy $L(T,O) = -T \log O - (1-T) log(1-O)$ we can see that this is actually 2 class cross entropy losses but since we know that T and O have to be O or one we can write $T'=1-T$. Knowing that lets rewrite this as a 2 class cross entropy loss. First, our T goes becomes a one hot vector ($T_v$) as we make $T_V = [T, 1-T]$ and we do the same for our Output. As a result our loss function $L(T_v,O_v) = \sum_{i=0}^1 -T_i \log(O_i)$. Now, since we have to ensure that $\sum_{i=0}^1 T_i \log(O_i) = 1$ irregardless of how many classes we add we leverage softmax function and rewrite our CE loss as $CE(T,O) = - \sum t_i \log \frac{e^{O_i}}{\sum_j^C e^{O_j}}$
 \section{Outlier Detection}
 \subsection{which value is a potential outlier}
-First we calculate $\mu=16.33636363636364$ as $\mu$ is the mean. Next we calculate $\sigma= \sqrt{\frac{\sum_i (x_i-\mu)^2}{N}}= 1.4846320188534794$
+First we calculate $\mu=16.33636363636364$ as $\mu$ is the mean. Next we calculate $\sigma= \sqrt{\frac{\sum_i (x_i-\mu)^2}{N}}= 1.4846320188534794$\\ 
 Next we calculate the z scores \\$=[ 0.24493,0.1592,0.3122,0.37964,3.0555,0.37964,0.1775, 0.3122,0.851,0.0244,0.581]$. \\ 
 Looking at Z scores we can see that 11.8 is an outlier with a z score of over 3.
 \subsection{Compute the local reach ability density of B and F}
@@ -109,5 +125,21 @@ $lrd_3(b)=0.11538$ and  $lrd_3(f)=00.08823$
 \subsection{compute the local outlier factor of A and F}
 $LOF_3(A) = 1.1783475783475785$ and $LOF_3(F)= 1.8385185185185182$
 \subsection{what are the possible outliers from the perspective of local outlier factor and why?}
-The LOF for all points are \\$= 1.1783, 1.222, 0.903, 0.6359, 1.339, 1.838, 1.956$ \\ which makes G and F likely outliers as their coefficient is highest it could also make D an outlier because their coefficient is lowest.
+The LOF for all points are \\$= 1.1783, 1.222, 0.903, 0.6359, 1.339, 1.838, 1.956$ \\ which makes G and F likely outliers as their coefficient is highest.
+\section{Graph Connectivity Optimization }
+\subsection{Report $\zeta_0$ and $p_1$}
+Since probability all starts the same $\zeta_0$ is $0.5*(1-.2)+(1-0.5) = (0.5)0.8 + 0.5 = 0.9$ raised to their degree which is $= [2,3,2,3,4]$ giving $\zeta_0 = [0.81  , 0.729 , 0.81  , 0.729 , 0.6561]$.\\
+Then the infection probability $1-p_{t+1}[i] = \sigma p_t[i] + (1-p_t[i])\zeta_t[i]$ can be rewritten as $p_{t+1}[i] = 1-( \sigma p_t[i] + (1-p_t[i])\zeta_t[i])$ which gives 
+$p_1= [0.545  , 0.5855 , 0.545  , 0.5855 , 0.62195]$. \\
+\subsection{If we have a vaccination to immune one node which is best. Intuitively explain the answer of (1) with your own words}
+If we don't vaccinate any node the infection probability is 0.5766. If we vaccinate 0 the infection probability is 0.5652 , for 1 it is 0.5439, for 2 it is 0.5652, for 3 it is 0.5439, and for 4 it is 0.5225. \\
+As a result, our best node to vaccinate is node 4. Intuitively this makes sense as 4 is the node that has the highest degree in our graph. By removing the node that is most connected in the network we essentially remove one 0.5 from our non infection probability which ensures that it stays $\frac{1}{0.9}$ bigger for all. This follows much of what we studied in class where the highest eigen value node is the optimal vaccination as long as the high degree nodes are separated. In the case of this problem since we have few nodes and are only vaccinating one it is not a concern.
+\section{Network Alignment}
+\subsection{What is the time complexity (in big O notation) for the computation}
+First off, the kronecker product of $A_1$ and $A_2$ takes $O(n^2m^2)$ to run as each element must be multiplied. Next, as the power method has linear convergence we must run this algorithm K times. Since this runs just like random walk algorithm but with two sets of nodes we have $N$ which represents the nodes in each of our matrixes of $nXm$. Thus the complexity is $O(K*2N) = O(KN)$ where N in number of nodes in each adjacency matrix.
+\subsection{Explain with your own words that why this component can capture the topology consistency}
+Topology consistency means the same node has a consistent connectivity structure across different networks. This is captured by the equation for Final because it is trying to minimize the the value that $J$ has with $S$. Since the main term in the equation is $\frac{S(x,a)}{\sqrt{f(x,a)}}-\frac{S(y,b)}{\sqrt{f(y,b)}}$ The goal of this equation is to minimize the difference between $S(x,a)$ and $S(y,B)$ an alignment that minimizes this has connected nodes that share network structure and attributes. Since this equation not only places value on the attributes but what they are connected to, it thus captures and maximizes an alignment that preserves topology consistency.
+\subsubsection{what is the approximated closed-form solution of s?  What is the time complexity of the approximated solution ?}
+First, we include the approximations in the closed form formula $s = (1-\alpha(I-\alpha D_n^{-\frac{1}{2}} N(U_1 \Lambda_1 U_1^T \circleland U_2 \Lambda_2 U_2^T)N D_N^{-\frac{1}{2}})^{-1} h$ by using the Sherman Morrison Lemma. We then move things around to simply to $s = (1-\alpha(I-\alpha D_n^{-\frac{1}{2}} N(U_1 \circleland U_2 *\Lambda_1 \circleland \Lambda_2 *U_1^T \circleland U_2^T)N D_N^{-\frac{1}{2}})^{-1} h$ which is further improved to $s = (1-\alpha(I+\alpha D_n^{-\frac{1}{2}} N(U_1 \circleland U_2 *\Lambda_1 \circleland \Lambda_2 *U_1^T \circleland U_2^T)^{-1} N D_N^{-\frac{1}{2}}) h$. This is finalized with $s = (1-\alpha(I-\alpha D_n^{-\frac{1}{2}} N*U_1 \circleland U_2((\Lambda_1 \circleland \Lambda_2)^-1 *\alpha U_1^T \circleland U_2^T N D_N^-1 N U_1 \circleland U_2 )^{-1} *U_1^T \circleland U_2^T *N D_N^{-\frac{1}{2}}) h$.  \\
+The complexity of the approximate solution from one is $O(n^2r^4)$ but since we do not have to calculate the approximations our solution is $O(N^2)$ as only random walk needs to be executed. 
 \end{document}
